@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ironman">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5f6f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131715" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Ironman 2027</title>
+<style>
+  /* Farver og typografi for appen. Navnene matcher dashboardets, så siden kan genbruges uændret. */
+  :root {
+    color-scheme: light;
+    --color-bg: #f5f6f3; --color-panel: #ffffff; --color-fg: #1c2420; --color-fg-muted: #65706a; --color-border-line: #e0e4df;
+    --color-ok: #2e7d4a; --color-warn: #b3761c; --color-bad: #c0392b;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 32px;
+    --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px; --cds-pad-xl: 24px;
+    --cds-radius: 8px;
+    --cds-font-size-caption: 12px; --cds-font-size-body: 14px; --cds-font-size-heading: 16px; --cds-font-size-title: 24px;
+    --cds-font-weight-medium: 600;
+    --cds-chart-grid: #eceee9; --cds-chart-axis: #c4cbc5; --cds-chart-reference: #88928b; --cds-chart-muted: #c8cec9; --cds-chart-status-critical: #d4473b;
+    --cds-surface-popover: #ffffff; --cds-border: #dde2dc; --cds-shadow-popover: 0 6px 20px rgba(20, 30, 25, .12); --cds-text-secondary: #65706a;
+    --cds-dur-slow: 400ms; --cds-ease-out: cubic-bezier(.2, .8, .2, 1);
+    --font-anthropic-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    --font-anthropic-serif: "New York", ui-serif, Georgia, "Times New Roman", serif;
+    --im-c1: #2563a8; --im-c2: #d47f24; --im-c3: #3a8a57; --im-c4: #8656b3; --im-c5: #c8463f; --im-c6: #8e897d; --im-c7: #3c9cae; --im-c8: #b39c32;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --color-bg: #131715; --color-panel: #1b201d; --color-fg: #e6ebe7; --color-fg-muted: #98a29b; --color-border-line: #2b322e;
+      --color-ok: #5bc27e; --color-warn: #e0a647; --color-bad: #ef6b5e;
+      --cds-chart-grid: #252b28; --cds-chart-axis: #39413c; --cds-chart-reference: #7c867e; --cds-chart-muted: #3d4540; --cds-chart-status-critical: #ef6b5e;
+      --cds-surface-popover: #222825; --cds-border: #323a35; --cds-shadow-popover: 0 6px 20px rgba(0, 0, 0, .5); --cds-text-secondary: #98a29b;
+      --im-c1: #69a6ea; --im-c2: #f0a456; --im-c3: #6cc38b; --im-c4: #b48ee0; --im-c5: #ef7b74; --im-c6: #aaa59a; --im-c7: #6cc7d7; --im-c8: #d8c35d;
+    }
+  }
+  html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); font-size: 14px; -webkit-font-smoothing: antialiased; }
+  #dash-root { max-width: 1400px; margin: 0 auto; padding: 28px max(16px, 3vw) 48px; }
+  [hidden] { display: none !important; }
+  .dash-skeleton { background: var(--cds-chart-grid); border-radius: var(--cds-radius); color: transparent; }
+  .im-updated { margin-top: var(--cds-gap-xs); }
+  #dash-root { padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+  .lock { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); box-sizing: border-box; }
+  .lock-box { width: min(100%, 22rem); display: grid; gap: 14px; text-align: center; }
+  .lock-box img { width: 84px; height: 84px; border-radius: 20px; margin: 0 auto; }
+  .lock-box h1 { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 28px; }
+  .lock-box p { margin: 0; color: var(--color-fg-muted); line-height: 1.5; }
+  .lock-box input { font: inherit; font-size: 17px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); }
+  .lock-box button, .foot button { font: inherit; font-size: 16px; padding: 12px 14px; border-radius: 10px; border: 0; background: var(--color-fg); color: var(--color-bg); cursor: pointer; }
+  .lock-box input:focus-visible, .lock-box button:focus-visible, .foot button:focus-visible { outline: 2px solid var(--im-c1); outline-offset: 2px; }
+  .lock-msg { min-height: 1.5em; color: var(--color-bad); }
+  .foot { display: flex; justify-content: center; padding: 8px 16px max(28px, env(safe-area-inset-bottom, 0px)); }
+  .foot button { background: transparent; color: var(--color-fg-muted); border: 1px solid var(--color-border-line); font-size: 13px; padding: 8px 14px; }
+</style>
+<script src="vendor/d3.min.js"></script>
+<script>
+  // Erstatning for dashboardets "dash"-objekt. Data kommer fra den krypterede fil, når den er låst op.
+  window.dash = (() => {
+    const D = () => (window.IM_DATA && window.IM_DATA.datasets) || {};
+    const calcs = new Map(), cache = new Map(), draws = new Map(), listeners = [];
+    let ready = false;
+    const colors = [1, 2, 3, 4, 5, 6, 7, 8].map((i) => `var(--im-c${i})`);
+    const data = (id) => {
+      if (calcs.has(id)) {
+        if (!cache.has(id)) {
+          const c = calcs.get(id);
+          try { cache.set(id, { status: 'ok', data: c.fn(...c.inputs.map((i) => data(i).data)) }); }
+          catch (e) { console.error('Beregning fejlede: ' + id, e); cache.set(id, { status: 'error', data: [] }); }
+        }
+        return cache.get(id);
+      }
+      const d = D();
+      return id in d ? { status: 'ok', data: d[id] } : { status: ready ? 'missing' : 'loading', data: [] };
+    };
+    const visible = (el) => el.isConnected && !el.closest('[hidden]');
+    const runEl = (el) => {
+      const fn = draws.get(el.dataset.draw);
+      if (!fn) return;
+      try { fn(el); } catch (e) { console.error('Tegning fejlede: ' + el.dataset.draw, e); }
+    };
+    const run = (name) => document.querySelectorAll(`[data-draw="${name}"]`).forEach((el) => { if (visible(el)) runEl(el); });
+    const widths = new WeakMap();
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const w = Math.round(e.contentRect.width);
+        if (widths.get(e.target) === w) continue;
+        widths.set(e.target, w);
+        if (ready && visible(e.target)) runEl(e.target);
+      }
+    });
+    new MutationObserver((muts) => {
+      if (!ready) return;
+      for (const m of muts) {
+        if (m.target.hidden) continue;
+        m.target.querySelectorAll('[data-draw]').forEach((el) => { if (visible(el)) runEl(el); });
+      }
+    }).observe(document.documentElement, { attributes: true, subtree: true, attributeFilter: ['hidden'] });
+    return {
+      data, colors,
+      loader() {},
+      calc(id, spec) { calcs.set(id, spec); cache.delete(id); },
+      onData(fn) { listeners.push(fn); if (ready) fn(); },
+      draw(name, fn) { if (fn) draws.set(name, fn); else if (ready) run(name); },
+      setLink(id) { try { history.replaceState(null, '', '#' + id); } catch (e) { /* ignoreres */ } },
+      params: () => ({}), setParams() {}, resetParams() {}, refresh() {},
+      __start() {
+        ready = true;
+        cache.clear();
+        listeners.forEach((f) => f());
+        document.querySelectorAll('[data-draw]').forEach((el) => {
+          widths.set(el, Math.round(el.getBoundingClientRect().width));
+          ro.observe(el);
+          if (visible(el)) runEl(el);
+        });
+      },
+    };
+  })();
+</script>
+</head>
+<body>
+<main class="lock" id="lock" hidden>
+  <form class="lock-box" id="lock-form" autocomplete="on">
+    <img src="icon-180.png" alt="">
+    <h1>Ironman 2027</h1>
+    <p>Skriv din kode for at se plan og data. Telefonen husker koden bagefter.</p>
+    <input type="password" id="lock-pw" name="password" autocomplete="current-password" aria-label="Kode" placeholder="Kode" required>
+    <button type="submit">Lås op</button>
+    <p class="lock-msg" id="lock-msg" role="status"></p>
+  </form>
+</main>
+<div id="dash-root"></div>
+<div class="foot" id="foot" hidden><button type="button" id="lock-again">Lås appen</button></div>
+<script>
+  // Henter den krypterede fil, låser op med koden og sætter siden ind.
+  (async () => {
+    const KEY = 'im-key';
+    const lock = document.getElementById('lock'), form = document.getElementById('lock-form');
+    const input = document.getElementById('lock-pw'), msg = document.getElementById('lock-msg');
+    const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+    const toB64 = (u8) => btoa(String.fromCharCode(...u8));
+    let enc;
+    try {
+      enc = await (await fetch('data.enc.json?t=' + Date.now(), { cache: 'no-store' })).json();
+    } catch (e) {
+      lock.hidden = false; form.querySelector('button').disabled = true;
+      msg.textContent = 'Kunne ikke hente data. Tjek din internetforbindelse.';
+      return;
+    }
+    const decrypt = async (raw) => {
+      const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(enc.iv) }, key, b64(enc.ct));
+      return JSON.parse(new TextDecoder().decode(plain));
+    };
+    const derive = async (pw) => {
+      const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+      return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(enc.salt), iterations: enc.iter }, base, 256));
+    };
+    const mount = (bundle) => {
+      window.IM_DATA = bundle.data;
+      const tpl = document.createElement('template');
+      tpl.innerHTML = bundle.page;
+      const scripts = [...tpl.content.querySelectorAll('script')];
+      scripts.forEach((s) => s.remove());
+      document.getElementById('dash-root').replaceChildren(tpl.content);
+      for (const s of scripts) {
+        const el = document.createElement('script');
+        el.textContent = s.textContent;
+        document.body.append(el);
+      }
+      lock.hidden = true;
+      document.getElementById('foot').hidden = false;
+      window.dash.__start();
+    };
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) { /* privat browsing */ }
+    if (saved) {
+      try { return mount(await decrypt(b64(saved))); } catch (e) { /* koden er skiftet */ }
+    }
+    lock.hidden = false;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Låser op …';
+      try {
+        const raw = await derive(input.value);
+        const bundle = await decrypt(raw);
+        try { localStorage.setItem(KEY, toB64(raw)); } catch (err) { /* husker ikke */ }
+        msg.textContent = '';
+        mount(bundle);
+      } catch (err) {
+        msg.textContent = 'Forkert kode. Prøv igen.';
+        input.select();
+      }
+    });
+  })();
+  document.getElementById('lock-again').addEventListener('click', () => {
+    try { localStorage.removeItem('im-key'); } catch (e) { /* ignoreres */ }
+    location.reload();
+  });
+</script>
+</body>
+</html>
